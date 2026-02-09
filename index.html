@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Квест - Очный этап</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div id="app">
+        <div id="login-screen" class="screen active">
+            <h1>🏆 Очный этап</h1>
+            <div class="login-option">
+                <h3>Я участник</h3>
+                <input type="text" id="team-code" placeholder="Введите код команды">
+                <button onclick="loginAsTeam()">Войти</button>
+            </div>
+            <div class="login-option">
+                <h3>Я организатор</h3>
+                <input type="password" id="admin-pass" placeholder="Пароль организатора">
+                <button onclick="loginAsAdmin()">Войти</button>
+            </div>
+        </div>
+
+        <div id="team-screen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="logout()">← Назад</button>
+                <h2 id="team-name"></h2>
+            </div>
+            
+            <div class="score-display">
+                <div class="score-number" id="team-score">0</div>
+                <div class="score-label">баллов</div>
+            </div>
+
+            <div class="section">
+                <h3>История баллов</h3>
+                <div id="history-list" class="history">
+                    <!-- История будет здесь -->
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Рейтинг команд</h3>
+                <div id="rating-list">
+                    <!-- Рейтинг будет здесь -->
+                </div>
+            </div>
+        </div>
+
+        <div id="admin-screen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="logout()">← Назад</button>
+                <h2>Панель организатора</h2>
+            </div>
+
+            <div class="section">
+                <h3>Начислить баллы</h3>
+                <select id="team-select">
+                    <option value="">Выберите команду</option>
+                </select>
+                <input type="number" id="points-input" placeholder="Количество баллов">
+                <input type="text" id="reason-input" placeholder="Причина">
+                <button onclick="addPoints()" class="btn-primary">Начислить</button>
+            </div>
+
+            <div class="section">
+                <h3>Быстрое начисление</h3>
+                <div id="quick-actions">
+                    <button onclick="quickAdd(10, 'Активность')">+10 Активность</button>
+                    <button onclick="quickAdd(20, 'Победа в мини-игре')">+20 Победа</button>
+                    <button onclick="quickAdd(30, 'Творческий подход')">+30 Творчество</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Текущий рейтинг</h3>
+                <div id="admin-rating">
+                    <!-- Тут обновляется рейтинг -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
