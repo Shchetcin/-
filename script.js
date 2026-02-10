@@ -2,7 +2,7 @@
 const CONFIG = {
   SHEET_ID: '15h-OZqL316OhvV0nHQzwFtpcCQ5Ynt_KgJkQZgGnLFs', // Вставьте сюда ID вашей таблицы
   ALLOWED_ORIGINS: [
-    'https://вашusername.github.io',
+    'https://Shchetcin.github.io',
     'http://localhost:5500', // Для локальной разработки
     'https://127.0.0.1:5500'
   ]
@@ -202,3 +202,4 @@ function getHistory(ss, teamId) {
   
   return { success: true, history: history };
 }
+
