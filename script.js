@@ -1,7 +1,7 @@
 // config.js
 const CONFIG = {
   // Замените на URL вашего Google Apps Script веб-приложения
-  API_URL: 'https://script.google.com/macros/s/AKfycbwZZpLMvTh-v_2R0DHLRfdml_L5DQ6eArDstsJcHYWNYpI7U98JQ-4dA_DEMSuUgMrx5w/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbz-Yrm_OHTqsqI7Rn64uO5hgnH2Qrh_uwAbLEH0fIjiKze0rGWEneadB_EztOge9WCTDw/exec',
   
   // Или если не работает, попробуйте через proxy (CORS Anywhere для теста):
   // API_URL: 'https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbw.../exec',
