@@ -1,7 +1,7 @@
 // config.js
 const CONFIG = {
   // Замените на URL вашего Google Apps Script веб-приложения
-  API_URL: 'https://script.google.com/macros/s/AKfycbw.../exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbx_gNbp1zA4PNXIJCWga1lXWjBewhRPL9V5BCZty83vmdzFn4Lm3VkXoU-9ZdNzs-7ZQg/exec',
   
   // Или если не работает, попробуйте через proxy (CORS Anywhere для теста):
   // API_URL: 'https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbw.../exec',
@@ -443,3 +443,4 @@ function logout() {
   document.getElementById('team-screen').classList.remove('active');
   document.getElementById('admin-screen').classList.remove('active');
 }
+
