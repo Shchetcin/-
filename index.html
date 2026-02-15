@@ -3,89 +3,1859 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Квест - Очный этап</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
+    <title>Координаторы Квеста 2026</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --light: #f9fafb;
+            --dark: #111827;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+            
+            --coordinator: #10b981;
+            --admin-block: #f59e0b;
+            --organizer: #6366f1;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .app {
+            background: white;
+            border-radius: 32px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            min-height: 90vh;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Экраны */
+        .screen {
+            display: none;
+            padding: 0;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Шапка */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 32px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .logo-text p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--light);
+            padding: 8px 16px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .badge-coordinator {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--coordinator);
+        }
+
+        .badge-admin-block {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--admin-block);
+        }
+
+        .badge-organizer {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--organizer);
+        }
+
+        .score-badge {
+            background: white;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Кнопки */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: white;
+            color: var(--dark);
+            border: 1px solid var(--border);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border: none;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+            border: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-icon {
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        /* Экран входа */
+        .login-wrapper {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            padding: 40px 32px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .login-card:hover {
+            transform: translateY(-8px);
+            background: white;
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+            color: white;
+        }
+
+        .icon-coordinator {
+            background: linear-gradient(135deg, var(--coordinator), #059669);
+        }
+
+        .icon-admin-block {
+            background: linear-gradient(135deg, var(--admin-block), #d97706);
+        }
+
+        .icon-organizer {
+            background: linear-gradient(135deg, var(--organizer), var(--primary-dark));
+        }
+
+        .login-card h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+
+        .login-card p {
+            color: var(--gray);
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+            text-align: center;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Дашборд */
+        .dashboard {
+            padding: 32px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Таблицы */
+        .table-container {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .table-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px;
+            background: var(--light);
+            color: var(--gray);
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+        }
+
+        tr:hover {
+            background: var(--light);
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .role-coordinator {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--coordinator);
+        }
+
+        .role-admin-block {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--admin-block);
+        }
+
+        .role-organizer {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--organizer);
+        }
+
+        .points-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .points-positive {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .points-negative {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Прогресс-бар лимита */
+        .limit-progress {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--light);
+            border-radius: 16px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--warning), #fbbf24);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .limit-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 32px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        /* Формы */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Быстрые действия */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .action-btn {
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid var(--border);
+        }
+
+        .action-btn i {
+            font-size: 24px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+        }
+
+        .action-btn.positive {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+        }
+
+        .action-btn.negative {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+        }
+
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            display: none;
+            animation: slideIn 0.3s;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .notification.success { background: var(--success); }
+        .notification.error { background: var(--danger); }
+        .notification.warning { background: var(--warning); }
+        .notification.info { background: var(--info); }
+
+        /* Адаптивность */
+        @media (max-width: 1024px) {
+            .login-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .login-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+                padding: 16px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard {
+                padding: 16px;
+            }
+            
+            .table-container {
+                padding: 16px;
+                overflow-x: auto;
+            }
+            
+            th, td {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+
+        /* Пустые состояния */
+        .empty-state {
+            text-align: center;
+            padding: 48px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        /* Загрузка */
+        .loader {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <div id="app">
-        <div id="login-screen" class="screen active">
-            <h1>🏆 Очный этап</h1>
-            <div class="login-option">
-                <h3>Я участник</h3>
-                <input type="text" id="team-code" placeholder="Введите код команды">
-                <button onclick="loginAsTeam()">Войти</button>
-            </div>
-            <div class="login-option">
-                <h3>Я организатор</h3>
-                <input type="password" id="admin-pass" placeholder="Пароль организатора">
-                <button onclick="loginAsAdmin()">Войти</button>
-            </div>
-        </div>
+    <div class="container">
+        <div class="app">
+            <!-- Экран входа -->
+            <div id="loginScreen" class="screen active">
+                <div class="login-wrapper">
+                    <div class="login-grid">
+                        <!-- Координатор (студент) -->
+                        <div class="login-card">
+                            <div class="login-icon icon-coordinator">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <h2>Координатор</h2>
+                            <p>Студенты, помогающие в проведении квеста</p>
+                            <input type="text" id="coordinatorCode" class="login-input" placeholder="Введите код доступа" maxlength="10">
+                            <button onclick="loginAsCoordinator()" class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-sign-in-alt"></i> Войти
+                            </button>
+                        </div>
 
-        <div id="team-screen" class="screen">
-            <div class="header">
-                <button class="back-btn" onclick="logout()">← Назад</button>
-                <h2 id="team-name"></h2>
-            </div>
-            
-            <div class="score-display">
-                <div class="score-number" id="team-score">0</div>
-                <div class="score-label">баллов</div>
-            </div>
+                        <!-- Админблок (старший студент) -->
+                        <div class="login-card">
+                            <div class="login-icon icon-admin-block">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <h2>Админблок</h2>
+                            <p>Старшие координаторы (до 10 баллов в день)</p>
+                            <input type="password" id="adminBlockPassword" class="login-input" placeholder="Введите пароль">
+                            <button onclick="loginAsAdminBlock()" class="btn btn-warning" style="width: 100%;">
+                                <i class="fas fa-shield-alt"></i> Войти
+                            </button>
+                        </div>
 
-            <div class="section">
-                <h3>История баллов</h3>
-                <div id="history-list" class="history">
-                    <!-- История будет здесь -->
+                        <!-- Организатор -->
+                        <div class="login-card">
+                            <div class="login-icon icon-organizer">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <h2>Организатор</h2>
+                            <p>Полный доступ к управлению системой</p>
+                            <input type="password" id="organizerPassword" class="login-input" placeholder="Введите пароль">
+                            <button onclick="loginAsOrganizer()" class="btn" style="width: 100%; background: var(--primary); color: white;">
+                                <i class="fas fa-lock"></i> Войти
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="section">
-                <h3>Рейтинг команд</h3>
-                <div id="rating-list">
-                    <!-- Рейтинг будет здесь -->
+            <!-- Экран координатора -->
+            <div id="coordinatorScreen" class="screen">
+                <div class="header">
+                    <div class="logo">
+                        <button onclick="logout()" class="btn btn-icon">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="logo-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h1 id="coordinatorName">Координатор</h1>
+                            <p id="coordinatorRole">Студент-координатор</p>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-badge badge-coordinator">
+                            <i class="fas fa-star"></i>
+                            <span id="coordinatorScore">0 баллов</span>
+                        </span>
+                        <button onclick="refreshData()" class="btn btn-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="dashboard">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="myScore">0</div>
+                            <div class="stat-label">Мои баллы</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="myPosition">-</div>
+                            <div class="stat-label">Место в рейтинге</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: var(--primary);">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="totalCoordinators">0</div>
+                            <div class="stat-label">Всего координаторов</div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>
+                                <i class="fas fa-history" style="color: var(--primary);"></i>
+                                История начислений
+                            </h3>
+                        </div>
+                        <div id="historyTable">
+                            <!-- Загружается динамически -->
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>
+                                <i class="fas fa-chart-line" style="color: var(--primary);"></i>
+                                Рейтинг координаторов
+                            </h3>
+                        </div>
+                        <div id="ratingTable">
+                            <!-- Загружается динамически -->
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="admin-screen" class="screen">
-            <div class="header">
-                <button class="back-btn" onclick="logout()">← Назад</button>
-                <h2>Панель организатора</h2>
-            </div>
+            <!-- Экран админблока -->
+            <div id="adminBlockScreen" class="screen">
+                <div class="header">
+                    <div class="logo">
+                        <button onclick="logout()" class="btn btn-icon">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="logo-icon" style="background: linear-gradient(135deg, var(--warning), #d97706);">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h1>Админблок</h1>
+                            <p id="adminBlockName">Старший координатор</p>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-badge badge-admin-block">
+                            <i class="fas fa-gem"></i>
+                            <span id="adminBlockRemaining">10/10 баллов</span>
+                        </span>
+                        <button onclick="refreshData()" class="btn btn-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
 
-            <div class="section">
-                <h3>Начислить баллы</h3>
-                <select id="team-select">
-                    <option value="">Выберите команду</option>
-                </select>
-                <input type="number" id="points-input" placeholder="Количество баллов">
-                <input type="text" id="reason-input" placeholder="Причина">
-                <button onclick="addPoints()" class="btn-primary">Начислить</button>
-            </div>
+                <div class="dashboard">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="todayUsed">0</div>
+                            <div class="stat-label">Использовано сегодня</div>
+                            <div class="limit-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="limitProgress" style="width: 0%"></div>
+                                </div>
+                                <div class="limit-text">
+                                    <span>Лимит: 10 баллов</span>
+                                    <span id="remainingPoints">10 осталось</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="section">
-                <h3>Быстрое начисление</h3>
-                <div id="quick-actions">
-                    <button onclick="quickAdd(10, 'Активность')">+10 Активность</button>
-                    <button onclick="quickAdd(20, 'Победа в мини-игре')">+20 Победа</button>
-                    <button onclick="quickAdd(30, 'Творческий подход')">+30 Творчество</button>
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>
+                                <i class="fas fa-users" style="color: var(--primary);"></i>
+                                Координаторы
+                            </h3>
+                        </div>
+
+                        <div class="quick-actions">
+                            <button onclick="quickAddPoints(5, 'Помощь в организации', 'Помощь')" class="action-btn positive">
+                                <i class="fas fa-hand-sparkles"></i>
+                                <span>+5 Помощь</span>
+                            </button>
+                            <button onclick="quickAddPoints(3, 'Активность', 'Активность')" class="action-btn positive">
+                                <i class="fas fa-bolt"></i>
+                                <span>+3 Активность</span>
+                            </button>
+                            <button onclick="quickAddPoints(2, 'Ответственность', 'Ответственность')" class="action-btn positive">
+                                <i class="fas fa-check-circle"></i>
+                                <span>+2 Ответств.</span>
+                            </button>
+                            <button onclick="quickAddPoints(-2, 'Опоздание', 'Опоздание')" class="action-btn negative">
+                                <i class="fas fa-clock"></i>
+                                <span>-2 Опоздание</span>
+                            </button>
+                            <button onclick="quickAddPoints(-5, 'Нарушение дисциплины', 'Нарушение')" class="action-btn negative">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>-5 Нарушение</span>
+                            </button>
+                        </div>
+
+                        <select id="coordinatorSelect" class="form-control" style="margin-bottom: 16px;">
+                            <option value="">Выберите координатора</option>
+                        </select>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <input type="number" id="pointsInput" class="form-control" placeholder="Баллы">
+                            <input type="text" id="reasonInput" class="form-control" placeholder="Причина">
+                        </div>
+
+                        <button onclick="manualAddPoints()" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-plus-circle"></i> Начислить баллы
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>
+                                <i class="fas fa-chart-bar" style="color: var(--primary);"></i>
+                                Рейтинг координаторов
+                            </h3>
+                        </div>
+                        <div id="adminBlockRating">
+                            <!-- Загружается динамически -->
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="section">
-                <h3>Текущий рейтинг</h3>
-                <div id="admin-rating">
-                    <!-- Тут обновляется рейтинг -->
+            <!-- Экран организатора -->
+            <div id="organizerScreen" class="screen">
+                <div class="header">
+                    <div class="logo">
+                        <button onclick="logout()" class="btn btn-icon">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="logo-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h1>Организатор</h1>
+                            <p>Панель управления</p>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-badge badge-organizer">
+                            <i class="fas fa-crown"></i>
+                            <span>Полный доступ</span>
+                        </span>
+                        <button onclick="refreshData()" class="btn btn-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="dashboard">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: var(--primary);">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="totalCoordinatorsStat">0</div>
+                            <div class="stat-label">Всего координаторов</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="totalScoreStat">0</div>
+                            <div class="stat-label">Всего баллов</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="adminBlockCount">0</div>
+                            <div class="stat-label">Админблок</div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>
+                                <i class="fas fa-users-cog"></i>
+                                Все координаторы
+                            </h3>
+                            <button onclick="showAddCoordinatorModal()" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Добавить
+                            </button>
+                        </div>
+                        <div id="allCoordinatorsTable">
+                            <!-- Загружается динамически -->
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>
+                                <i class="fas fa-clock"></i>
+                                Последние операции
+                            </h3>
+                        </div>
+                        <div id="recentTransactions">
+                            <!-- Загружается динамически -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Модальное окно добавления координатора -->
+    <div id="addCoordinatorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Добавить координатора</h2>
+                <button onclick="closeModal('addCoordinatorModal')" class="modal-close">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>ФИО *</label>
+                <input type="text" id="newCoordName" class="form-control" placeholder="Иванов Иван Иванович">
+            </div>
+            <div class="form-group">
+                <label>Код доступа *</label>
+                <input type="text" id="newCoordCode" class="form-control" placeholder="COORD123" maxlength="10">
+            </div>
+            <div class="form-group">
+                <label>Роль</label>
+                <select id="newCoordRole" class="form-control">
+                    <option value="coordinator">Координатор</option>
+                    <option value="admin_block">Админблок</option>
+                    <option value="organizer">Организатор</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Телефон</label>
+                <input type="text" id="newCoordPhone" class="form-control" placeholder="+7 (999) 123-45-67">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="newCoordEmail" class="form-control" placeholder="ivan@mail.ru">
+            </div>
+            <button onclick="addCoordinator()" class="btn btn-success" style="width: 100%;">
+                <i class="fas fa-save"></i> Сохранить
+            </button>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования координатора -->
+    <div id="editCoordinatorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Редактировать</h2>
+                <button onclick="closeModal('editCoordinatorModal')" class="modal-close">&times;</button>
+            </div>
+            <input type="hidden" id="editCoordId">
+            <div class="form-group">
+                <label>ФИО *</label>
+                <input type="text" id="editCoordName" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Код доступа *</label>
+                <input type="text" id="editCoordCode" class="form-control" maxlength="10">
+            </div>
+            <div class="form-group">
+                <label>Роль</label>
+                <select id="editCoordRole" class="form-control">
+                    <option value="coordinator">Координатор</option>
+                    <option value="admin_block">Админблок</option>
+                    <option value="organizer">Организатор</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Телефон</label>
+                <input type="text" id="editCoordPhone" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="editCoordEmail" class="form-control">
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button onclick="updateCoordinator()" class="btn btn-primary" style="flex: 1;">
+                    <i class="fas fa-save"></i> Обновить
+                </button>
+                <button onclick="deleteCoordinator()" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомления -->
     <div id="notification" class="notification"></div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="script.js"></script>
+
+    <script>
+    // ================= КОНФИГУРАЦИЯ =================
+    const CONFIG = {
+        SCRIPT_URL: 'URL_ВАШЕГО_СКРИПТА',
+        ROLES: {
+            COORDINATOR: 'coordinator',
+            ADMIN_BLOCK: 'admin_block',
+            ORGANIZER: 'organizer'
+        },
+        PASSWORDS: {
+            admin_block: 'admin2026',
+            organizer: 'org2026'
+        },
+        DAILY_LIMIT: 10,
+        REFRESH_INTERVAL: 30000
+    };
+
+    // ================= СОСТОЯНИЕ =================
+    let currentState = {
+        user: null,
+        role: null,
+        allCoordinators: [],
+        transactions: [],
+        rating: [],
+        todayUsed: 0
+    };
+
+    // ================= ИНИЦИАЛИЗАЦИЯ =================
+    document.addEventListener('DOMContentLoaded', function() {
+        checkSavedSession();
+    });
+
+    function checkSavedSession() {
+        const savedUser = localStorage.getItem('currentUser');
+        const savedRole = localStorage.getItem('userRole');
+        
+        if (savedUser && savedRole) {
+            currentState.user = JSON.parse(savedUser);
+            currentState.role = savedRole;
+            
+            switch(savedRole) {
+                case CONFIG.ROLES.COORDINATOR:
+                    showScreen('coordinatorScreen');
+                    loadCoordinatorData();
+                    break;
+                case CONFIG.ROLES.ADMIN_BLOCK:
+                    showScreen('adminBlockScreen');
+                    loadAdminBlockData();
+                    break;
+                case CONFIG.ROLES.ORGANIZER:
+                    showScreen('organizerScreen');
+                    loadOrganizerData();
+                    break;
+            }
+            
+            startAutoRefresh();
+        }
+    }
+
+    // ================= АВТОРИЗАЦИЯ =================
+    async function loginAsCoordinator() {
+        const code = document.getElementById('coordinatorCode').value.trim().toUpperCase();
+        
+        if (!code) {
+            showNotification('Введите код доступа', 'error');
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${CONFIG.SCRIPT_URL}?action=getCoordinatorByCode&code=${encodeURIComponent(code)}`);
+            const result = await response.json();
+            
+            if (result.success && result.data.coordinator) {
+                const coordinator = result.data.coordinator;
+                
+                if (coordinator.role !== CONFIG.ROLES.COORDINATOR) {
+                    showNotification('Этот код не для входа координатора', 'error');
+                    return;
+                }
+                
+                currentState.user = coordinator;
+                currentState.role = CONFIG.ROLES.COORDINATOR;
+                
+                localStorage.setItem('currentUser', JSON.stringify(coordinator));
+                localStorage.setItem('userRole', CONFIG.ROLES.COORDINATOR);
+                
+                showScreen('coordinatorScreen');
+                loadCoordinatorData();
+                startAutoRefresh();
+                showNotification(`Добро пожаловать, ${coordinator.name}!`, 'success');
+            } else {
+                showNotification('Координатор не найден', 'error');
+            }
+        } catch (error) {
+            showNotification('Ошибка подключения', 'error');
+        }
+    }
+
+    async function loginAsAdminBlock() {
+        const password = document.getElementById('adminBlockPassword').value;
+        
+        if (!password) {
+            showNotification('Введите пароль', 'error');
+            return;
+        }
+        
+        if (password !== CONFIG.PASSWORDS.admin_block) {
+            showNotification('Неверный пароль', 'error');
+            return;
+        }
+        
+        // Для демо создаем тестового пользователя админблока
+        currentState.user = {
+            id: 3,
+            name: 'Сидоров Алексей',
+            role: CONFIG.ROLES.ADMIN_BLOCK
+        };
+        currentState.role = CONFIG.ROLES.ADMIN_BLOCK;
+        
+        localStorage.setItem('currentUser', JSON.stringify(currentState.user));
+        localStorage.setItem('userRole', CONFIG.ROLES.ADMIN_BLOCK);
+        
+        showScreen('adminBlockScreen');
+        loadAdminBlockData();
+        startAutoRefresh();
+        showNotification('Добро пожаловать, Админблок!', 'success');
+    }
+
+    async function loginAsOrganizer() {
+        const password = document.getElementById('organizerPassword').value;
+        
+        if (!password) {
+            showNotification('Введите пароль', 'error');
+            return;
+        }
+        
+        if (password !== CONFIG.PASSWORDS.organizer) {
+            showNotification('Неверный пароль', 'error');
+            return;
+        }
+        
+        currentState.user = {
+            id: 4,
+            name: 'Организатор',
+            role: CONFIG.ROLES.ORGANIZER
+        };
+        currentState.role = CONFIG.ROLES.ORGANIZER;
+        
+        localStorage.setItem('currentUser', JSON.stringify(currentState.user));
+        localStorage.setItem('userRole', CONFIG.ROLES.ORGANIZER);
+        
+        showScreen('organizerScreen');
+        loadOrganizerData();
+        startAutoRefresh();
+        showNotification('Доступ организатора активирован', 'success');
+    }
+
+    function logout() {
+        currentState = {
+            user: null,
+            role: null,
+            allCoordinators: [],
+            transactions: [],
+            rating: [],
+            todayUsed: 0
+        };
+        
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('userRole');
+        
+        stopAutoRefresh();
+        showScreen('loginScreen');
+        
+        document.getElementById('coordinatorCode').value = '';
+        document.getElementById('adminBlockPassword').value = '';
+        document.getElementById('organizerPassword').value = '';
+        
+        showNotification('Выход выполнен', 'info');
+    }
+
+    // ================= ЗАГРУЗКА ДАННЫХ =================
+    async function loadCoordinatorData() {
+        if (!currentState.user) return;
+        
+        try {
+            // Загружаем рейтинг
+            const ratingResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getRating`);
+            const ratingResult = await ratingResponse.json();
+            
+            if (ratingResult.success) {
+                currentState.rating = ratingResult.data.rating || [];
+                
+                // Обновляем данные текущего пользователя
+                const updatedUser = currentState.rating.find(c => c.id == currentState.user.id);
+                if (updatedUser) {
+                    currentState.user.score = updatedUser.score || 0;
+                    document.getElementById('coordinatorName').textContent = currentState.user.name || 'Координатор';
+                    document.getElementById('coordinatorScore').textContent = `${currentState.user.score || 0} баллов`;
+                    document.getElementById('myScore').textContent = currentState.user.score || 0;
+                    
+                    // Место в рейтинге
+                    const position = currentState.rating.findIndex(c => c.id == currentState.user.id) + 1;
+                    document.getElementById('myPosition').textContent = position || '-';
+                    document.getElementById('totalCoordinators').textContent = currentState.rating.length;
+                }
+                
+                updateCoordinatorRating();
+            }
+            
+            // Загружаем историю
+            const historyResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getTransactions&coordinatorId=${currentState.user.id}`);
+            const historyResult = await historyResponse.json();
+            
+            if (historyResult.success) {
+                currentState.transactions = historyResult.data.transactions || [];
+                updateCoordinatorHistory();
+            }
+            
+        } catch (error) {
+            console.error('Ошибка загрузки:', error);
+        }
+    }
+
+    async function loadAdminBlockData() {
+        try {
+            // Загружаем всех координаторов
+            const coordResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getCoordinators`);
+            const coordResult = await coordResponse.json();
+            
+            if (coordResult.success) {
+                currentState.allCoordinators = coordResult.data.coordinators || [];
+                updateAdminBlockSelect();
+                updateAdminBlockRating();
+            }
+            
+            // Загружаем использованные баллы за сегодня
+            if (currentState.user) {
+                const limitResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getTodayUsedPoints&userId=${currentState.user.id}&role=admin_block`);
+                const limitResult = await limitResponse.json();
+                
+                if (limitResult.success) {
+                    currentState.todayUsed = limitResult.data.used || 0;
+                    updateLimitDisplay();
+                }
+            }
+            
+        } catch (error) {
+            console.error('Ошибка загрузки:', error);
+        }
+    }
+
+    async function loadOrganizerData() {
+        try {
+            const coordResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getCoordinators`);
+            const coordResult = await coordResponse.json();
+            
+            if (coordResult.success) {
+                currentState.allCoordinators = coordResult.data.coordinators || [];
+                updateOrganizerTables();
+            }
+            
+            const statsResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getStats`);
+            const statsResult = await statsResponse.json();
+            
+            if (statsResult.success) {
+                document.getElementById('totalCoordinatorsStat').textContent = statsResult.data.totalCoordinators || 0;
+                document.getElementById('totalScoreStat').textContent = statsResult.data.totalScore || 0;
+                document.getElementById('adminBlockCount').textContent = statsResult.data.adminBlockCount || 0;
+            }
+            
+            const transResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getTransactions`);
+            const transResult = await transResponse.json();
+            
+            if (transResult.success) {
+                updateOrganizerTransactions(transResult.data.transactions || []);
+            }
+            
+        } catch (error) {
+            console.error('Ошибка загрузки:', error);
+        }
+    }
+
+    // ================= ОБНОВЛЕНИЕ ИНТЕРФЕЙСА =================
+    function updateCoordinatorRating() {
+        const container = document.getElementById('ratingTable');
+        
+        if (!currentState.rating || currentState.rating.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-trophy"></i><p>Рейтинг пока пуст</p></div>';
+            return;
+        }
+        
+        let html = '<table><thead><tr><th>Место</th><th>ФИО</th><th>Роль</th><th>Баллы</th></tr></thead><tbody>';
+        
+        currentState.rating.forEach((coord, index) => {
+            const isCurrent = currentState.user && coord.id == currentState.user.id;
+            const medal = index < 3 ? ['🥇', '🥈', '🥉'][index] : `${index + 1}.`;
+            const roleClass = coord.role === 'admin_block' ? 'role-admin-block' : 'role-coordinator';
+            const roleText = coord.role === 'admin_block' ? 'Админблок' : 'Координатор';
+            
+            html += `
+                <tr ${isCurrent ? 'style="background: #f0f9ff;"' : ''}>
+                    <td><strong>${medal}</strong></td>
+                    <td>${coord.name} ${isCurrent ? '<span class="role-badge role-coordinator">Вы</span>' : ''}</td>
+                    <td><span class="role-badge ${roleClass}">${roleText}</span></td>
+                    <td><strong>${coord.score || 0}</strong></td>
+                </tr>
+            `;
+        });
+        
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    function updateCoordinatorHistory() {
+        const container = document.getElementById('historyTable');
+        
+        if (!currentState.transactions || currentState.transactions.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-history"></i><p>История пуста</p></div>';
+            return;
+        }
+        
+        let html = '<table><thead><tr><th>Время</th><th>Баллы</th><th>Причина</th><th>Кто</th></tr></thead><tbody>';
+        
+        currentState.transactions.slice(0, 10).forEach(trans => {
+            const time = trans.timestamp ? new Date(trans.timestamp).toLocaleString() : '--:--';
+            const pointsClass = trans.points > 0 ? 'points-positive' : 'points-negative';
+            const pointsSign = trans.points > 0 ? '+' : '';
+            
+            html += `
+                <tr>
+                    <td>${time}</td>
+                    <td><span class="points-badge ${pointsClass}">${pointsSign}${trans.points || 0}</span></td>
+                    <td>${trans.reason || ''}</td>
+                    <td>${trans.giver || ''} (${trans.giverRole === 'admin_block' ? 'Админблок' : 'Организатор'})</td>
+                </tr>
+            `;
+        });
+        
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    function updateAdminBlockSelect() {
+        const select = document.getElementById('coordinatorSelect');
+        select.innerHTML = '<option value="">Выберите координатора</option>';
+        
+        currentState.allCoordinators
+            .filter(c => c.role === CONFIG.ROLES.COORDINATOR)
+            .forEach(coord => {
+                const option = document.createElement('option');
+                option.value = coord.id;
+                option.textContent = `${coord.name} (${coord.score || 0} баллов)`;
+                select.appendChild(option);
+            });
+    }
+
+    function updateAdminBlockRating() {
+        const container = document.getElementById('adminBlockRating');
+        const coordinators = currentState.allCoordinators.filter(c => c.role === CONFIG.ROLES.COORDINATOR);
+        const sorted = [...coordinators].sort((a, b) => (b.score || 0) - (a.score || 0));
+        
+        let html = '<table><thead><tr><th>Место</th><th>ФИО</th><th>Баллы</th></tr></thead><tbody>';
+        
+        sorted.slice(0, 10).forEach((coord, index) => {
+            html += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${coord.name}</td>
+                    <td><strong>${coord.score || 0}</strong></td>
+                </tr>
+            `;
+        });
+        
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    function updateLimitDisplay() {
+        const remaining = CONFIG.DAILY_LIMIT - currentState.todayUsed;
+        document.getElementById('todayUsed').textContent = currentState.todayUsed;
+        document.getElementById('adminBlockRemaining').textContent = `${remaining}/${CONFIG.DAILY_LIMIT} баллов`;
+        document.getElementById('remainingPoints').textContent = `${remaining} осталось`;
+        
+        const percent = (currentState.todayUsed / CONFIG.DAILY_LIMIT) * 100;
+        document.getElementById('limitProgress').style.width = `${Math.min(percent, 100)}%`;
+    }
+
+    function updateOrganizerTables() {
+        const container = document.getElementById('allCoordinatorsTable');
+        
+        if (!currentState.allCoordinators || currentState.allCoordinators.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>Нет координаторов</p></div>';
+            return;
+        }
+        
+        let html = '<table><thead><tr><th>ID</th><th>ФИО</th><th>Роль</th><th>Баллы</th><th>Код</th><th>Телефон</th><th>Действия</th></tr></thead><tbody>';
+        
+        currentState.allCoordinators.forEach(coord => {
+            const roleClass = coord.role === 'admin_block' ? 'role-admin-block' : 
+                             coord.role === 'organizer' ? 'role-organizer' : 'role-coordinator';
+            const roleText = coord.role === 'admin_block' ? 'Админблок' : 
+                            coord.role === 'organizer' ? 'Организатор' : 'Координатор';
+            
+            html += `
+                <tr>
+                    <td>${coord.id}</td>
+                    <td><strong>${coord.name}</strong></td>
+                    <td><span class="role-badge ${roleClass}">${roleText}</span></td>
+                    <td><span class="points-badge points-positive">${coord.score || 0}</span></td>
+                    <td><code>${coord.code}</code></td>
+                    <td>${coord.phone || '-'}</td>
+                    <td>
+                        <button onclick="openEditCoordinatorModal(${coord.id})" class="btn btn-icon">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    function updateOrganizerTransactions(transactions) {
+        const container = document.getElementById('recentTransactions');
+        
+        if (!transactions || transactions.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-clock"></i><p>Нет операций</p></div>';
+            return;
+        }
+        
+        let html = '<table><thead><tr><th>Время</th><th>Координатор</th><th>Баллы</th><th>Причина</th><th>Кто</th></tr></thead><tbody>';
+        
+        transactions.slice(0, 10).forEach(trans => {
+            const time = trans.timestamp ? new Date(trans.timestamp).toLocaleString() : '--:--';
+            const pointsClass = trans.points > 0 ? 'points-positive' : 'points-negative';
+            const pointsSign = trans.points > 0 ? '+' : '';
+            
+            html += `
+                <tr>
+                    <td>${time}</td>
+                    <td>${trans.coordinatorName || 'ID: ' + trans.coordinatorId}</td>
+                    <td><span class="points-badge ${pointsClass}">${pointsSign}${trans.points || 0}</span></td>
+                    <td>${trans.reason || ''}</td>
+                    <td>${trans.giver || ''}</td>
+                </tr>
+            `;
+        });
+        
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    // ================= ОПЕРАЦИИ С БАЛЛАМИ =================
+    async function quickAddPoints(points, reason, displayName) {
+        const select = document.getElementById('coordinatorSelect');
+        const coordinatorId = select.value;
+        
+        if (!coordinatorId) {
+            showNotification('Выберите координатора', 'warning');
+            return;
+        }
+        
+        document.getElementById('pointsInput').value = points;
+        document.getElementById('reasonInput').value = reason;
+        
+        await manualAddPoints();
+    }
+
+    async function manualAddPoints() {
+        const coordinatorId = document.getElementById('coordinatorSelect').value;
+        const points = parseInt(document.getElementById('pointsInput').value);
+        const reason = document.getElementById('reasonInput').value.trim();
+        
+        if (!coordinatorId || isNaN(points) || !reason) {
+            showNotification('Заполните все поля', 'error');
+            return;
+        }
+        
+        if (currentState.role === CONFIG.ROLES.ADMIN_BLOCK) {
+            const remaining = CONFIG.DAILY_LIMIT - currentState.todayUsed;
+            if (Math.abs(points) > remaining) {
+                showNotification(`Лимит на сегодня: осталось ${remaining} баллов`, 'error');
+                return;
+            }
+        }
+        
+        try {
+            const formData = new FormData();
+            formData.append('action', 'addPoints');
+            formData.append('coordinatorId', coordinatorId);
+            formData.append('points', points);
+            formData.append('reason', reason);
+            formData.append('giverId', currentState.user?.id || 0);
+            formData.append('giverRole', currentState.role);
+            formData.append('giverName', currentState.user?.name || 'Админблок');
+            formData.append('giverPassword', currentState.role === CONFIG.ROLES.ADMIN_BLOCK ? CONFIG.PASSWORDS.admin_block : CONFIG.PASSWORDS.organizer);
+            
+            const response = await fetch(CONFIG.SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification(result.data.message, 'success');
+                
+                document.getElementById('pointsInput').value = '';
+                document.getElementById('reasonInput').value = '';
+                
+                if (currentState.role === CONFIG.ROLES.ADMIN_BLOCK) {
+                    loadAdminBlockData();
+                } else {
+                    loadOrganizerData();
+                }
+                
+                if (currentState.role === CONFIG.ROLES.ADMIN_BLOCK && currentState.user) {
+                    currentState.todayUsed += Math.abs(points);
+                    updateLimitDisplay();
+                }
+            } else {
+                showNotification(result.data.error || 'Ошибка', 'error');
+            }
+        } catch (error) {
+            showNotification('Ошибка сети', 'error');
+        }
+    }
+
+    // ================= УПРАВЛЕНИЕ КООРДИНАТОРАМИ =================
+    function showAddCoordinatorModal() {
+        document.getElementById('addCoordinatorModal').classList.add('active');
+    }
+
+    function openEditCoordinatorModal(id) {
+        const coordinator = currentState.allCoordinators.find(c => c.id == id);
+        if (coordinator) {
+            document.getElementById('editCoordId').value = coordinator.id;
+            document.getElementById('editCoordName').value = coordinator.name || '';
+            document.getElementById('editCoordCode').value = coordinator.code || '';
+            document.getElementById('editCoordRole').value = coordinator.role || 'coordinator';
+            document.getElementById('editCoordPhone').value = coordinator.phone || '';
+            document.getElementById('editCoordEmail').value = coordinator.email || '';
+            
+            document.getElementById('editCoordinatorModal').classList.add('active');
+        }
+    }
+
+    async function addCoordinator() {
+        const name = document.getElementById('newCoordName').value.trim();
+        const code = document.getElementById('newCoordCode').value.trim().toUpperCase();
+        const role = document.getElementById('newCoordRole').value;
+        const phone = document.getElementById('newCoordPhone').value.trim();
+        const email = document.getElementById('newCoordEmail').value.trim();
+        
+        if (!name || !code) {
+            showNotification('Заполните обязательные поля', 'error');
+            return;
+        }
+        
+        try {
+            const formData = new FormData();
+            formData.append('action', 'addCoordinator');
+            formData.append('name', name);
+            formData.append('code', code);
+            formData.append('role', role);
+            formData.append('phone', phone);
+            formData.append('email', email);
+            formData.append('password', CONFIG.PASSWORDS.organizer);
+            
+            const response = await fetch(CONFIG.SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('Координатор добавлен', 'success');
+                closeModal('addCoordinatorModal');
+                
+                document.getElementById('newCoordName').value = '';
+                document.getElementById('newCoordCode').value = '';
+                document.getElementById('newCoordPhone').value = '';
+                document.getElementById('newCoordEmail').value = '';
+                
+                loadOrganizerData();
+            } else {
+                showNotification(result.data.error || 'Ошибка', 'error');
+            }
+        } catch (error) {
+            showNotification('Ошибка сети', 'error');
+        }
+    }
+
+    async function updateCoordinator() {
+        const id = document.getElementById('editCoordId').value;
+        const name = document.getElementById('editCoordName').value.trim();
+        const code = document.getElementById('editCoordCode').value.trim().toUpperCase();
+        const role = document.getElementById('editCoordRole').value;
+        const phone = document.getElementById('editCoordPhone').value.trim();
+        const email = document.getElementById('editCoordEmail').value.trim();
+        
+        if (!id || !name || !code || !role) {
+            showNotification('Заполните обязательные поля', 'error');
+            return;
+        }
+        
+        try {
+            const formData = new FormData();
+            formData.append('action', 'updateCoordinator');
+            formData.append('coordinatorId', id);
+            formData.append('name', name);
+            formData.append('code', code);
+            formData.append('role', role);
+            formData.append('phone', phone);
+            formData.append('email', email);
+            formData.append('password', CONFIG.PASSWORDS.organizer);
+            
+            const response = await fetch(CONFIG.SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('Координатор обновлен', 'success');
+                closeModal('editCoordinatorModal');
+                loadOrganizerData();
+            } else {
+                showNotification(result.data.error || 'Ошибка', 'error');
+            }
+        } catch (error) {
+            showNotification('Ошибка сети', 'error');
+        }
+    }
+
+    async function deleteCoordinator() {
+        const id = document.getElementById('editCoordId').value;
+        
+        if (!confirm('Удалить координатора? Это действие нельзя отменить.')) {
+            return;
+        }
+        
+        try {
+            const formData = new FormData();
+            formData.append('action', 'deleteCoordinator');
+            formData.append('coordinatorId', id);
+            formData.append('password', CONFIG.PASSWORDS.organizer);
+            
+            const response = await fetch(CONFIG.SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('Координатор удален', 'success');
+                closeModal('editCoordinatorModal');
+                loadOrganizerData();
+            } else {
+                showNotification(result.data.error || 'Ошибка', 'error');
+            }
+        } catch (error) {
+            showNotification('Ошибка сети', 'error');
+        }
+    }
+
+    // ================= УТИЛИТЫ =================
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function showNotification(message, type = 'info') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = `notification ${type}`;
+        notification.style.display = 'block';
+        
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+
+    function refreshData() {
+        switch(currentState.role) {
+            case CONFIG.ROLES.COORDINATOR:
+                loadCoordinatorData();
+                break;
+            case CONFIG.ROLES.ADMIN_BLOCK:
+                loadAdminBlockData();
+                break;
+            case CONFIG.ROLES.ORGANIZER:
+                loadOrganizerData();
+                break;
+        }
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    function startAutoRefresh() {
+        stopAutoRefresh();
+        window.refreshInterval = setInterval(refreshData, CONFIG.REFRESH_INTERVAL);
+    }
+
+    function stopAutoRefresh() {
+        if (window.refreshInterval) {
+            clearInterval(window.refreshInterval);
+        }
+    }
+
+    // Глобальные функции
+    window.loginAsCoordinator = loginAsCoordinator;
+    window.loginAsAdminBlock = loginAsAdminBlock;
+    window.loginAsOrganizer = loginAsOrganizer;
+    window.logout = logout;
+    window.refreshData = refreshData;
+    window.quickAddPoints = quickAddPoints;
+    window.manualAddPoints = manualAddPoints;
+    window.showAddCoordinatorModal = showAddCoordinatorModal;
+    window.openEditCoordinatorModal = openEditCoordinatorModal;
+    window.addCoordinator = addCoordinator;
+    window.updateCoordinator = updateCoordinator;
+    window.deleteCoordinator = deleteCoordinator;
+    window.closeModal = closeModal;
+    </script>
 </body>
 </html>
