@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Координаторы Квеста 2026</title>
+    <title>Квест 2026 – Система координаторов</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -25,11 +25,11 @@
             --dark: #111827;
             --gray: #6b7280;
             --border: #e5e7eb;
-            
+
             --coordinator: #10b981;
             --admin-block: #f59e0b;
             --organizer: #6366f1;
-            
+
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
@@ -52,13 +52,11 @@
             box-shadow: var(--shadow-lg);
             overflow: hidden;
             min-height: 90vh;
-            backdrop-filter: blur(10px);
         }
 
         /* Экраны */
         .screen {
             display: none;
-            padding: 0;
         }
 
         .screen.active {
@@ -79,6 +77,8 @@
             padding: 20px 32px;
             background: white;
             border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .logo {
@@ -120,6 +120,7 @@
             padding: 8px 16px;
             border-radius: 40px;
             border: 1px solid var(--border);
+            flex-wrap: wrap;
         }
 
         .user-badge {
@@ -367,6 +368,7 @@
             box-shadow: var(--shadow);
             border: 1px solid var(--border);
             margin-bottom: 32px;
+            overflow-x: auto;
         }
 
         .table-header {
@@ -374,6 +376,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .table-header h3 {
@@ -388,6 +392,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 600px;
         }
 
         th {
@@ -452,7 +457,7 @@
             color: var(--danger);
         }
 
-        /* Прогресс-бар лимита */
+        /* Прогресс-бар лимита (для админблока) */
         .limit-progress {
             margin-top: 16px;
             padding: 16px;
@@ -480,6 +485,50 @@
             justify-content: space-between;
             font-size: 14px;
             color: var(--gray);
+        }
+
+        /* Быстрые действия */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .action-btn {
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid var(--border);
+        }
+
+        .action-btn i {
+            font-size: 24px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+        }
+
+        .action-btn.positive {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+        }
+
+        .action-btn.negative {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
         }
 
         /* Модальные окна */
@@ -574,50 +623,6 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
-        /* Быстрые действия */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin: 20px 0;
-        }
-
-        .action-btn {
-            padding: 16px;
-            border: none;
-            border-radius: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            background: white;
-            border: 1px solid var(--border);
-        }
-
-        .action-btn i {
-            font-size: 24px;
-        }
-
-        .action-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow);
-        }
-
-        .action-btn.positive {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: none;
-        }
-
-        .action-btn.negative {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            border: none;
-        }
-
         /* Уведомления */
         .notification {
             position: fixed;
@@ -654,30 +659,27 @@
             .login-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .header {
                 flex-direction: column;
-                gap: 16px;
                 text-align: center;
                 padding: 16px;
             }
-            
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .dashboard {
                 padding: 16px;
             }
-            
+
             .table-container {
                 padding: 16px;
-                overflow-x: auto;
             }
-            
-            th, td {
-                padding: 12px;
-                font-size: 14px;
+
+            .quick-actions {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -893,48 +895,49 @@
                         </div>
                     </div>
 
+                    <!-- Блок начисления баллов для админблока -->
                     <div class="table-container">
                         <div class="table-header">
                             <h3>
-                                <i class="fas fa-users" style="color: var(--primary);"></i>
-                                Координаторы
+                                <i class="fas fa-plus-circle" style="color: var(--primary);"></i>
+                                Начислить баллы координаторам
                             </h3>
                         </div>
 
                         <div class="quick-actions">
-                            <button onclick="quickAddPoints(5, 'Помощь в организации', 'Помощь')" class="action-btn positive">
+                            <button onclick="quickAddPoints(5, 'Помощь в организации')" class="action-btn positive">
                                 <i class="fas fa-hand-sparkles"></i>
                                 <span>+5 Помощь</span>
                             </button>
-                            <button onclick="quickAddPoints(3, 'Активность', 'Активность')" class="action-btn positive">
+                            <button onclick="quickAddPoints(3, 'Активность')" class="action-btn positive">
                                 <i class="fas fa-bolt"></i>
                                 <span>+3 Активность</span>
                             </button>
-                            <button onclick="quickAddPoints(2, 'Ответственность', 'Ответственность')" class="action-btn positive">
+                            <button onclick="quickAddPoints(2, 'Ответственность')" class="action-btn positive">
                                 <i class="fas fa-check-circle"></i>
                                 <span>+2 Ответств.</span>
                             </button>
-                            <button onclick="quickAddPoints(-2, 'Опоздание', 'Опоздание')" class="action-btn negative">
+                            <button onclick="quickAddPoints(-2, 'Опоздание')" class="action-btn negative">
                                 <i class="fas fa-clock"></i>
                                 <span>-2 Опоздание</span>
                             </button>
-                            <button onclick="quickAddPoints(-5, 'Нарушение дисциплины', 'Нарушение')" class="action-btn negative">
+                            <button onclick="quickAddPoints(-5, 'Нарушение дисциплины')" class="action-btn negative">
                                 <i class="fas fa-exclamation-triangle"></i>
                                 <span>-5 Нарушение</span>
                             </button>
                         </div>
 
-                        <select id="coordinatorSelect" class="form-control" style="margin-bottom: 16px;">
+                        <select id="coordinatorSelectAdmin" class="form-control" style="margin-bottom: 16px;">
                             <option value="">Выберите координатора</option>
                         </select>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-                            <input type="number" id="pointsInput" class="form-control" placeholder="Баллы">
-                            <input type="text" id="reasonInput" class="form-control" placeholder="Причина">
+                            <input type="number" id="pointsInputAdmin" class="form-control" placeholder="Баллы">
+                            <input type="text" id="reasonInputAdmin" class="form-control" placeholder="Причина">
                         </div>
 
-                        <button onclick="manualAddPoints()" class="btn btn-primary" style="width: 100%;">
-                            <i class="fas fa-plus-circle"></i> Начислить баллы
+                        <button onclick="manualAddPoints('admin')" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-check"></i> Начислить баллы
                         </button>
                     </div>
 
@@ -1009,6 +1012,53 @@
                         </div>
                     </div>
 
+                    <!-- Блок начисления баллов для организатора (без лимита) -->
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>
+                                <i class="fas fa-plus-circle" style="color: var(--success);"></i>
+                                Начислить баллы координаторам (без ограничений)
+                            </h3>
+                        </div>
+
+                        <div class="quick-actions">
+                            <button onclick="quickAddPointsOrganizer(10, 'Отличная работа')" class="action-btn positive">
+                                <i class="fas fa-star"></i>
+                                <span>+10 Отлично</span>
+                            </button>
+                            <button onclick="quickAddPointsOrganizer(5, 'Помощь')" class="action-btn positive">
+                                <i class="fas fa-hand-sparkles"></i>
+                                <span>+5 Помощь</span>
+                            </button>
+                            <button onclick="quickAddPointsOrganizer(3, 'Активность')" class="action-btn positive">
+                                <i class="fas fa-bolt"></i>
+                                <span>+3 Активность</span>
+                            </button>
+                            <button onclick="quickAddPointsOrganizer(-5, 'Замечание')" class="action-btn negative">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>-5 Замечание</span>
+                            </button>
+                            <button onclick="quickAddPointsOrganizer(-10, 'Нарушение')" class="action-btn negative">
+                                <i class="fas fa-ban"></i>
+                                <span>-10 Нарушение</span>
+                            </button>
+                        </div>
+
+                        <select id="coordinatorSelectOrg" class="form-control" style="margin-bottom: 16px;">
+                            <option value="">Выберите координатора</option>
+                        </select>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <input type="number" id="pointsInputOrg" class="form-control" placeholder="Баллы">
+                            <input type="text" id="reasonInputOrg" class="form-control" placeholder="Причина">
+                        </div>
+
+                        <button onclick="manualAddPoints('org')" class="btn btn-success" style="width: 100%;">
+                            <i class="fas fa-check"></i> Начислить баллы
+                        </button>
+                    </div>
+
+                    <!-- Таблица всех координаторов -->
                     <div class="table-container">
                         <div class="table-header">
                             <h3>
@@ -1024,6 +1074,7 @@
                         </div>
                     </div>
 
+                    <!-- Последние операции -->
                     <div class="table-container">
                         <div class="table-header">
                             <h3>
@@ -1081,7 +1132,7 @@
     <div id="editCoordinatorModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Редактировать</h2>
+                <h2>Редактировать координатора</h2>
                 <button onclick="closeModal('editCoordinatorModal')" class="modal-close">&times;</button>
             </div>
             <input type="hidden" id="editCoordId">
@@ -1126,19 +1177,19 @@
     <script>
     // ================= КОНФИГУРАЦИЯ =================
     const CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycby3Ngce1MlSMV4aHkrbhU-eiWtmHj1muR6D1DHq9VmQzop4jfe9X3-p-ONniMND6z03aw/exec',
-    ROLES: {
-        COORDINATOR: 'coordinator',
-        ADMIN_BLOCK: 'admin_block',
-        ORGANIZER: 'organizer'
-    },
-    PASSWORDS: {
-        admin_block: 'admin2026',
-        organizer: 'org2026'
-    },
-    DAILY_LIMIT: 10,
-    REFRESH_INTERVAL: 30000
-};
+        SCRIPT_URL: 'https://script.google.com/macros/s/AKfycby3Ngce1MlSMV4aHkrbhU-eiWtmHj1muR6D1DHq9VmQzop4jfe9X3-p-ONniMND6z03aw/exec', // ЗАМЕНИТЕ НА СВОЙ URL
+        ROLES: {
+            COORDINATOR: 'coordinator',
+            ADMIN_BLOCK: 'admin_block',
+            ORGANIZER: 'organizer'
+        },
+        PASSWORDS: {
+            admin_block: 'admin2026',
+            organizer: 'org2026'
+        },
+        DAILY_LIMIT: 10,
+        REFRESH_INTERVAL: 30000
+    };
 
     // ================= СОСТОЯНИЕ =================
     let currentState = {
@@ -1177,7 +1228,6 @@
                     loadOrganizerData();
                     break;
             }
-            
             startAutoRefresh();
         }
     }
@@ -1185,7 +1235,6 @@
     // ================= АВТОРИЗАЦИЯ =================
     async function loginAsCoordinator() {
         const code = document.getElementById('coordinatorCode').value.trim().toUpperCase();
-        
         if (!code) {
             showNotification('Введите код доступа', 'error');
             return;
@@ -1197,18 +1246,14 @@
             
             if (result.success && result.data.coordinator) {
                 const coordinator = result.data.coordinator;
-                
                 if (coordinator.role !== CONFIG.ROLES.COORDINATOR) {
                     showNotification('Этот код не для входа координатора', 'error');
                     return;
                 }
-                
                 currentState.user = coordinator;
                 currentState.role = CONFIG.ROLES.COORDINATOR;
-                
                 localStorage.setItem('currentUser', JSON.stringify(coordinator));
                 localStorage.setItem('userRole', CONFIG.ROLES.COORDINATOR);
-                
                 showScreen('coordinatorScreen');
                 loadCoordinatorData();
                 startAutoRefresh();
@@ -1223,28 +1268,23 @@
 
     async function loginAsAdminBlock() {
         const password = document.getElementById('adminBlockPassword').value;
-        
         if (!password) {
             showNotification('Введите пароль', 'error');
             return;
         }
-        
         if (password !== CONFIG.PASSWORDS.admin_block) {
             showNotification('Неверный пароль', 'error');
             return;
         }
-        
-        // Для демо создаем тестового пользователя админблока
+        // Для демо создаём тестового пользователя админблока
         currentState.user = {
             id: 3,
             name: 'Сидоров Алексей',
             role: CONFIG.ROLES.ADMIN_BLOCK
         };
         currentState.role = CONFIG.ROLES.ADMIN_BLOCK;
-        
         localStorage.setItem('currentUser', JSON.stringify(currentState.user));
         localStorage.setItem('userRole', CONFIG.ROLES.ADMIN_BLOCK);
-        
         showScreen('adminBlockScreen');
         loadAdminBlockData();
         startAutoRefresh();
@@ -1253,27 +1293,22 @@
 
     async function loginAsOrganizer() {
         const password = document.getElementById('organizerPassword').value;
-        
         if (!password) {
             showNotification('Введите пароль', 'error');
             return;
         }
-        
         if (password !== CONFIG.PASSWORDS.organizer) {
             showNotification('Неверный пароль', 'error');
             return;
         }
-        
         currentState.user = {
             id: 4,
             name: 'Организатор',
             role: CONFIG.ROLES.ORGANIZER
         };
         currentState.role = CONFIG.ROLES.ORGANIZER;
-        
         localStorage.setItem('currentUser', JSON.stringify(currentState.user));
         localStorage.setItem('userRole', CONFIG.ROLES.ORGANIZER);
-        
         showScreen('organizerScreen');
         loadOrganizerData();
         startAutoRefresh();
@@ -1289,88 +1324,66 @@
             rating: [],
             todayUsed: 0
         };
-        
         localStorage.removeItem('currentUser');
         localStorage.removeItem('userRole');
-        
         stopAutoRefresh();
         showScreen('loginScreen');
-        
         document.getElementById('coordinatorCode').value = '';
         document.getElementById('adminBlockPassword').value = '';
         document.getElementById('organizerPassword').value = '';
-        
         showNotification('Выход выполнен', 'info');
     }
 
     // ================= ЗАГРУЗКА ДАННЫХ =================
     async function loadCoordinatorData() {
         if (!currentState.user) return;
-        
         try {
-            // Загружаем рейтинг
             const ratingResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getRating`);
             const ratingResult = await ratingResponse.json();
-            
             if (ratingResult.success) {
                 currentState.rating = ratingResult.data.rating || [];
-                
-                // Обновляем данные текущего пользователя
                 const updatedUser = currentState.rating.find(c => c.id == currentState.user.id);
                 if (updatedUser) {
                     currentState.user.score = updatedUser.score || 0;
                     document.getElementById('coordinatorName').textContent = currentState.user.name || 'Координатор';
                     document.getElementById('coordinatorScore').textContent = `${currentState.user.score || 0} баллов`;
                     document.getElementById('myScore').textContent = currentState.user.score || 0;
-                    
-                    // Место в рейтинге
                     const position = currentState.rating.findIndex(c => c.id == currentState.user.id) + 1;
                     document.getElementById('myPosition').textContent = position || '-';
                     document.getElementById('totalCoordinators').textContent = currentState.rating.length;
                 }
-                
                 updateCoordinatorRating();
             }
-            
-            // Загружаем историю
             const historyResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getTransactions&coordinatorId=${currentState.user.id}`);
             const historyResult = await historyResponse.json();
-            
             if (historyResult.success) {
                 currentState.transactions = historyResult.data.transactions || [];
                 updateCoordinatorHistory();
             }
-            
         } catch (error) {
-            console.error('Ошибка загрузки:', error);
+            console.error(error);
         }
     }
 
     async function loadAdminBlockData() {
         try {
-            // Загружаем всех координаторов
             const coordResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getCoordinators`);
             const coordResult = await coordResponse.json();
-            
             if (coordResult.success) {
                 currentState.allCoordinators = coordResult.data.coordinators || [];
                 updateAdminBlockSelect();
                 updateAdminBlockRating();
             }
-            
-            // Загружаем использованные баллы за сегодня
             if (currentState.user) {
                 const limitResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getTodayUsedPoints&userId=${currentState.user.id}&role=admin_block`);
                 const limitResult = await limitResponse.json();
-                
                 if (limitResult.success) {
                     currentState.todayUsed = limitResult.data.used || 0;
                     updateLimitDisplay();
                 }
             }
-            
         } catch (error) {
-            console.error('Ошибка загрузки:', error);
+            console.error(error);
         }
     }
 
@@ -1378,97 +1391,77 @@
         try {
             const coordResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getCoordinators`);
             const coordResult = await coordResponse.json();
-            
             if (coordResult.success) {
                 currentState.allCoordinators = coordResult.data.coordinators || [];
                 updateOrganizerTables();
+                updateOrganizerSelect();
             }
-            
             const statsResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getStats`);
             const statsResult = await statsResponse.json();
-            
             if (statsResult.success) {
                 document.getElementById('totalCoordinatorsStat').textContent = statsResult.data.totalCoordinators || 0;
                 document.getElementById('totalScoreStat').textContent = statsResult.data.totalScore || 0;
                 document.getElementById('adminBlockCount').textContent = statsResult.data.adminBlockCount || 0;
             }
-            
             const transResponse = await fetch(`${CONFIG.SCRIPT_URL}?action=getTransactions`);
             const transResult = await transResponse.json();
-            
             if (transResult.success) {
                 updateOrganizerTransactions(transResult.data.transactions || []);
             }
-            
         } catch (error) {
-            console.error('Ошибка загрузки:', error);
+            console.error(error);
         }
     }
 
     // ================= ОБНОВЛЕНИЕ ИНТЕРФЕЙСА =================
     function updateCoordinatorRating() {
         const container = document.getElementById('ratingTable');
-        
         if (!currentState.rating || currentState.rating.length === 0) {
             container.innerHTML = '<div class="empty-state"><i class="fas fa-trophy"></i><p>Рейтинг пока пуст</p></div>';
             return;
         }
-        
         let html = '<table><thead><tr><th>Место</th><th>ФИО</th><th>Роль</th><th>Баллы</th></tr></thead><tbody>';
-        
         currentState.rating.forEach((coord, index) => {
             const isCurrent = currentState.user && coord.id == currentState.user.id;
             const medal = index < 3 ? ['🥇', '🥈', '🥉'][index] : `${index + 1}.`;
             const roleClass = coord.role === 'admin_block' ? 'role-admin-block' : 'role-coordinator';
             const roleText = coord.role === 'admin_block' ? 'Админблок' : 'Координатор';
-            
-            html += `
-                <tr ${isCurrent ? 'style="background: #f0f9ff;"' : ''}>
-                    <td><strong>${medal}</strong></td>
-                    <td>${coord.name} ${isCurrent ? '<span class="role-badge role-coordinator">Вы</span>' : ''}</td>
-                    <td><span class="role-badge ${roleClass}">${roleText}</span></td>
-                    <td><strong>${coord.score || 0}</strong></td>
-                </tr>
-            `;
+            html += `<tr ${isCurrent ? 'style="background: #f0f9ff;"' : ''}>
+                <td><strong>${medal}</strong></td>
+                <td>${coord.name} ${isCurrent ? '<span class="role-badge role-coordinator">Вы</span>' : ''}</td>
+                <td><span class="role-badge ${roleClass}">${roleText}</span></td>
+                <td><strong>${coord.score || 0}</strong></td>
+            </tr>`;
         });
-        
         html += '</tbody></table>';
         container.innerHTML = html;
     }
 
     function updateCoordinatorHistory() {
         const container = document.getElementById('historyTable');
-        
         if (!currentState.transactions || currentState.transactions.length === 0) {
             container.innerHTML = '<div class="empty-state"><i class="fas fa-history"></i><p>История пуста</p></div>';
             return;
         }
-        
         let html = '<table><thead><tr><th>Время</th><th>Баллы</th><th>Причина</th><th>Кто</th></tr></thead><tbody>';
-        
         currentState.transactions.slice(0, 10).forEach(trans => {
-            const time = trans.timestamp ? new Date(trans.timestamp).toLocaleString() : '--:--';
+            const time = trans.time ? new Date(trans.time).toLocaleString() : '--:--';
             const pointsClass = trans.points > 0 ? 'points-positive' : 'points-negative';
             const pointsSign = trans.points > 0 ? '+' : '';
-            
-            html += `
-                <tr>
-                    <td>${time}</td>
-                    <td><span class="points-badge ${pointsClass}">${pointsSign}${trans.points || 0}</span></td>
-                    <td>${trans.reason || ''}</td>
-                    <td>${trans.giver || ''} (${trans.giverRole === 'admin_block' ? 'Админблок' : 'Организатор'})</td>
-                </tr>
-            `;
+            html += `<tr>
+                <td>${time}</td>
+                <td><span class="points-badge ${pointsClass}">${pointsSign}${trans.points || 0}</span></td>
+                <td>${trans.reason || ''}</td>
+                <td>${trans.giver || ''} (${trans.giverRole === 'admin_block' ? 'Админблок' : 'Организатор'})</td>
+            </tr>`;
         });
-        
         html += '</tbody></table>';
         container.innerHTML = html;
     }
 
     function updateAdminBlockSelect() {
-        const select = document.getElementById('coordinatorSelect');
+        const select = document.getElementById('coordinatorSelectAdmin');
         select.innerHTML = '<option value="">Выберите координатора</option>';
-        
         currentState.allCoordinators
             .filter(c => c.role === CONFIG.ROLES.COORDINATOR)
             .forEach(coord => {
@@ -1483,19 +1476,10 @@
         const container = document.getElementById('adminBlockRating');
         const coordinators = currentState.allCoordinators.filter(c => c.role === CONFIG.ROLES.COORDINATOR);
         const sorted = [...coordinators].sort((a, b) => (b.score || 0) - (a.score || 0));
-        
         let html = '<table><thead><tr><th>Место</th><th>ФИО</th><th>Баллы</th></tr></thead><tbody>';
-        
         sorted.slice(0, 10).forEach((coord, index) => {
-            html += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${coord.name}</td>
-                    <td><strong>${coord.score || 0}</strong></td>
-                </tr>
-            `;
+            html += `<tr><td>${index + 1}</td><td>${coord.name}</td><td><strong>${coord.score || 0}</strong></td></tr>`;
         });
-        
         html += '</tbody></table>';
         container.innerHTML = html;
     }
@@ -1505,112 +1489,116 @@
         document.getElementById('todayUsed').textContent = currentState.todayUsed;
         document.getElementById('adminBlockRemaining').textContent = `${remaining}/${CONFIG.DAILY_LIMIT} баллов`;
         document.getElementById('remainingPoints').textContent = `${remaining} осталось`;
-        
         const percent = (currentState.todayUsed / CONFIG.DAILY_LIMIT) * 100;
         document.getElementById('limitProgress').style.width = `${Math.min(percent, 100)}%`;
     }
 
     function updateOrganizerTables() {
         const container = document.getElementById('allCoordinatorsTable');
-        
         if (!currentState.allCoordinators || currentState.allCoordinators.length === 0) {
             container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>Нет координаторов</p></div>';
             return;
         }
-        
         let html = '<table><thead><tr><th>ID</th><th>ФИО</th><th>Роль</th><th>Баллы</th><th>Код</th><th>Телефон</th><th>Действия</th></tr></thead><tbody>';
-        
         currentState.allCoordinators.forEach(coord => {
             const roleClass = coord.role === 'admin_block' ? 'role-admin-block' : 
                              coord.role === 'organizer' ? 'role-organizer' : 'role-coordinator';
             const roleText = coord.role === 'admin_block' ? 'Админблок' : 
                             coord.role === 'organizer' ? 'Организатор' : 'Координатор';
-            
-            html += `
-                <tr>
-                    <td>${coord.id}</td>
-                    <td><strong>${coord.name}</strong></td>
-                    <td><span class="role-badge ${roleClass}">${roleText}</span></td>
-                    <td><span class="points-badge points-positive">${coord.score || 0}</span></td>
-                    <td><code>${coord.code}</code></td>
-                    <td>${coord.phone || '-'}</td>
-                    <td>
-                        <button onclick="openEditCoordinatorModal(${coord.id})" class="btn btn-icon">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
+            html += `<tr>
+                <td>${coord.id}</td>
+                <td><strong>${coord.name}</strong></td>
+                <td><span class="role-badge ${roleClass}">${roleText}</span></td>
+                <td><span class="points-badge points-positive">${coord.score || 0}</span></td>
+                <td><code>${coord.code}</code></td>
+                <td>${coord.phone || '-'}</td>
+                <td>
+                    <button onclick="openEditCoordinatorModal(${coord.id})" class="btn btn-icon">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </td>
+            </tr>`;
         });
-        
         html += '</tbody></table>';
         container.innerHTML = html;
     }
 
+    function updateOrganizerSelect() {
+        const select = document.getElementById('coordinatorSelectOrg');
+        select.innerHTML = '<option value="">Выберите координатора</option>';
+        currentState.allCoordinators
+            .filter(c => c.role === CONFIG.ROLES.COORDINATOR || c.role === CONFIG.ROLES.ADMIN_BLOCK)
+            .forEach(coord => {
+                const option = document.createElement('option');
+                option.value = coord.id;
+                const roleText = coord.role === 'admin_block' ? ' (Админблок)' : '';
+                option.textContent = `${coord.name}${roleText} (${coord.score || 0} баллов)`;
+                select.appendChild(option);
+            });
+    }
+
     function updateOrganizerTransactions(transactions) {
         const container = document.getElementById('recentTransactions');
-        
         if (!transactions || transactions.length === 0) {
             container.innerHTML = '<div class="empty-state"><i class="fas fa-clock"></i><p>Нет операций</p></div>';
             return;
         }
-        
         let html = '<table><thead><tr><th>Время</th><th>Координатор</th><th>Баллы</th><th>Причина</th><th>Кто</th></tr></thead><tbody>';
-        
         transactions.slice(0, 10).forEach(trans => {
-            const time = trans.timestamp ? new Date(trans.timestamp).toLocaleString() : '--:--';
+            const time = trans.time ? new Date(trans.time).toLocaleString() : '--:--';
             const pointsClass = trans.points > 0 ? 'points-positive' : 'points-negative';
             const pointsSign = trans.points > 0 ? '+' : '';
-            
-            html += `
-                <tr>
-                    <td>${time}</td>
-                    <td>${trans.coordinatorName || 'ID: ' + trans.coordinatorId}</td>
-                    <td><span class="points-badge ${pointsClass}">${pointsSign}${trans.points || 0}</span></td>
-                    <td>${trans.reason || ''}</td>
-                    <td>${trans.giver || ''}</td>
-                </tr>
-            `;
+            html += `<tr>
+                <td>${time}</td>
+                <td>${trans.coordinatorName || 'ID: ' + trans.coordinatorId}</td>
+                <td><span class="points-badge ${pointsClass}">${pointsSign}${trans.points || 0}</span></td>
+                <td>${trans.reason || ''}</td>
+                <td>${trans.giver || ''}</td>
+            </tr>`;
         });
-        
         html += '</tbody></table>';
         container.innerHTML = html;
     }
 
     // ================= ОПЕРАЦИИ С БАЛЛАМИ =================
-    async function quickAddPoints(points, reason, displayName) {
-        const select = document.getElementById('coordinatorSelect');
-        const coordinatorId = select.value;
-        
-        if (!coordinatorId) {
-            showNotification('Выберите координатора', 'warning');
-            return;
-        }
-        
-        document.getElementById('pointsInput').value = points;
-        document.getElementById('reasonInput').value = reason;
-        
-        await manualAddPoints();
+    function quickAddPoints(points, reason) {
+        document.getElementById('pointsInputAdmin').value = points;
+        document.getElementById('reasonInputAdmin').value = reason;
+        manualAddPoints('admin');
     }
 
-    async function manualAddPoints() {
-        const coordinatorId = document.getElementById('coordinatorSelect').value;
-        const points = parseInt(document.getElementById('pointsInput').value);
-        const reason = document.getElementById('reasonInput').value.trim();
-        
+    function quickAddPointsOrganizer(points, reason) {
+        document.getElementById('pointsInputOrg').value = points;
+        document.getElementById('reasonInputOrg').value = reason;
+        manualAddPoints('org');
+    }
+
+    async function manualAddPoints(source) {
+        let coordinatorId, points, reason;
+        if (source === 'admin') {
+            coordinatorId = document.getElementById('coordinatorSelectAdmin').value;
+            points = parseInt(document.getElementById('pointsInputAdmin').value);
+            reason = document.getElementById('reasonInputAdmin').value.trim();
+        } else {
+            coordinatorId = document.getElementById('coordinatorSelectOrg').value;
+            points = parseInt(document.getElementById('pointsInputOrg').value);
+            reason = document.getElementById('reasonInputOrg').value.trim();
+        }
+
         if (!coordinatorId || isNaN(points) || !reason) {
             showNotification('Заполните все поля', 'error');
             return;
         }
-        
-        if (currentState.role === CONFIG.ROLES.ADMIN_BLOCK) {
+
+        // Проверка лимита для админблока
+        if (source === 'admin' && currentState.role === CONFIG.ROLES.ADMIN_BLOCK) {
             const remaining = CONFIG.DAILY_LIMIT - currentState.todayUsed;
             if (Math.abs(points) > remaining) {
                 showNotification(`Лимит на сегодня: осталось ${remaining} баллов`, 'error');
                 return;
             }
         }
-        
+
         try {
             const formData = new FormData();
             formData.append('action', 'addPoints');
@@ -1619,31 +1607,30 @@
             formData.append('reason', reason);
             formData.append('giverId', currentState.user?.id || 0);
             formData.append('giverRole', currentState.role);
-            formData.append('giverName', currentState.user?.name || 'Админблок');
-            formData.append('giverPassword', currentState.role === CONFIG.ROLES.ADMIN_BLOCK ? CONFIG.PASSWORDS.admin_block : CONFIG.PASSWORDS.organizer);
-            
+            formData.append('giverName', currentState.user?.name || (source === 'admin' ? 'Админблок' : 'Организатор'));
+            formData.append('giverPassword', 
+                currentState.role === CONFIG.ROLES.ADMIN_BLOCK ? CONFIG.PASSWORDS.admin_block : CONFIG.PASSWORDS.organizer);
+
             const response = await fetch(CONFIG.SCRIPT_URL, {
                 method: 'POST',
                 body: formData
             });
-            
             const result = await response.json();
-            
+
             if (result.success) {
                 showNotification(result.data.message, 'success');
-                
-                document.getElementById('pointsInput').value = '';
-                document.getElementById('reasonInput').value = '';
-                
-                if (currentState.role === CONFIG.ROLES.ADMIN_BLOCK) {
+                if (source === 'admin') {
+                    document.getElementById('pointsInputAdmin').value = '';
+                    document.getElementById('reasonInputAdmin').value = '';
                     loadAdminBlockData();
+                    if (currentState.role === CONFIG.ROLES.ADMIN_BLOCK) {
+                        currentState.todayUsed += Math.abs(points);
+                        updateLimitDisplay();
+                    }
                 } else {
+                    document.getElementById('pointsInputOrg').value = '';
+                    document.getElementById('reasonInputOrg').value = '';
                     loadOrganizerData();
-                }
-                
-                if (currentState.role === CONFIG.ROLES.ADMIN_BLOCK && currentState.user) {
-                    currentState.todayUsed += Math.abs(points);
-                    updateLimitDisplay();
                 }
             } else {
                 showNotification(result.data.error || 'Ошибка', 'error');
@@ -1653,7 +1640,7 @@
         }
     }
 
-    // ================= УПРАВЛЕНИЕ КООРДИНАТОРАМИ =================
+    // ================= УПРАВЛЕНИЕ КООРДИНАТОРАМИ (только организатор) =================
     function showAddCoordinatorModal() {
         document.getElementById('addCoordinatorModal').classList.add('active');
     }
@@ -1667,7 +1654,6 @@
             document.getElementById('editCoordRole').value = coordinator.role || 'coordinator';
             document.getElementById('editCoordPhone').value = coordinator.phone || '';
             document.getElementById('editCoordEmail').value = coordinator.email || '';
-            
             document.getElementById('editCoordinatorModal').classList.add('active');
         }
     }
@@ -1678,12 +1664,12 @@
         const role = document.getElementById('newCoordRole').value;
         const phone = document.getElementById('newCoordPhone').value.trim();
         const email = document.getElementById('newCoordEmail').value.trim();
-        
+
         if (!name || !code) {
             showNotification('Заполните обязательные поля', 'error');
             return;
         }
-        
+
         try {
             const formData = new FormData();
             formData.append('action', 'addCoordinator');
@@ -1693,23 +1679,17 @@
             formData.append('phone', phone);
             formData.append('email', email);
             formData.append('password', CONFIG.PASSWORDS.organizer);
-            
-            const response = await fetch(CONFIG.SCRIPT_URL, {
-                method: 'POST',
-                body: formData
-            });
-            
+
+            const response = await fetch(CONFIG.SCRIPT_URL, { method: 'POST', body: formData });
             const result = await response.json();
-            
+
             if (result.success) {
                 showNotification('Координатор добавлен', 'success');
                 closeModal('addCoordinatorModal');
-                
                 document.getElementById('newCoordName').value = '';
                 document.getElementById('newCoordCode').value = '';
                 document.getElementById('newCoordPhone').value = '';
                 document.getElementById('newCoordEmail').value = '';
-                
                 loadOrganizerData();
             } else {
                 showNotification(result.data.error || 'Ошибка', 'error');
@@ -1726,12 +1706,12 @@
         const role = document.getElementById('editCoordRole').value;
         const phone = document.getElementById('editCoordPhone').value.trim();
         const email = document.getElementById('editCoordEmail').value.trim();
-        
+
         if (!id || !name || !code || !role) {
             showNotification('Заполните обязательные поля', 'error');
             return;
         }
-        
+
         try {
             const formData = new FormData();
             formData.append('action', 'updateCoordinator');
@@ -1742,14 +1722,10 @@
             formData.append('phone', phone);
             formData.append('email', email);
             formData.append('password', CONFIG.PASSWORDS.organizer);
-            
-            const response = await fetch(CONFIG.SCRIPT_URL, {
-                method: 'POST',
-                body: formData
-            });
-            
+
+            const response = await fetch(CONFIG.SCRIPT_URL, { method: 'POST', body: formData });
             const result = await response.json();
-            
+
             if (result.success) {
                 showNotification('Координатор обновлен', 'success');
                 closeModal('editCoordinatorModal');
@@ -1764,24 +1740,17 @@
 
     async function deleteCoordinator() {
         const id = document.getElementById('editCoordId').value;
-        
-        if (!confirm('Удалить координатора? Это действие нельзя отменить.')) {
-            return;
-        }
-        
+        if (!confirm('Удалить координатора? Это действие нельзя отменить.')) return;
+
         try {
             const formData = new FormData();
             formData.append('action', 'deleteCoordinator');
             formData.append('coordinatorId', id);
             formData.append('password', CONFIG.PASSWORDS.organizer);
-            
-            const response = await fetch(CONFIG.SCRIPT_URL, {
-                method: 'POST',
-                body: formData
-            });
-            
+
+            const response = await fetch(CONFIG.SCRIPT_URL, { method: 'POST', body: formData });
             const result = await response.json();
-            
+
             if (result.success) {
                 showNotification('Координатор удален', 'success');
                 closeModal('editCoordinatorModal');
@@ -1796,9 +1765,7 @@
 
     // ================= УТИЛИТЫ =================
     function showScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.classList.remove('active');
-        });
+        document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
     }
 
@@ -1807,23 +1774,14 @@
         notification.textContent = message;
         notification.className = `notification ${type}`;
         notification.style.display = 'block';
-        
-        setTimeout(() => {
-            notification.style.display = 'none';
-        }, 3000);
+        setTimeout(() => { notification.style.display = 'none'; }, 3000);
     }
 
     function refreshData() {
         switch(currentState.role) {
-            case CONFIG.ROLES.COORDINATOR:
-                loadCoordinatorData();
-                break;
-            case CONFIG.ROLES.ADMIN_BLOCK:
-                loadAdminBlockData();
-                break;
-            case CONFIG.ROLES.ORGANIZER:
-                loadOrganizerData();
-                break;
+            case CONFIG.ROLES.COORDINATOR: loadCoordinatorData(); break;
+            case CONFIG.ROLES.ADMIN_BLOCK: loadAdminBlockData(); break;
+            case CONFIG.ROLES.ORGANIZER: loadOrganizerData(); break;
         }
     }
 
@@ -1837,18 +1795,17 @@
     }
 
     function stopAutoRefresh() {
-        if (window.refreshInterval) {
-            clearInterval(window.refreshInterval);
-        }
+        if (window.refreshInterval) clearInterval(window.refreshInterval);
     }
 
-    // Глобальные функции
+    // Глобальные функции для кнопок
     window.loginAsCoordinator = loginAsCoordinator;
     window.loginAsAdminBlock = loginAsAdminBlock;
     window.loginAsOrganizer = loginAsOrganizer;
     window.logout = logout;
     window.refreshData = refreshData;
     window.quickAddPoints = quickAddPoints;
+    window.quickAddPointsOrganizer = quickAddPointsOrganizer;
     window.manualAddPoints = manualAddPoints;
     window.showAddCoordinatorModal = showAddCoordinatorModal;
     window.openEditCoordinatorModal = openEditCoordinatorModal;
@@ -1859,9 +1816,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
